@@ -11,7 +11,6 @@ namespace MyTestApp
 {
     class Program
     {
-      
         public static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -25,50 +24,21 @@ namespace MyTestApp
 
 
             //Auto-migrations
-
-            //var host = Host.CreateDefaultBuilder(args)
-            //    .ConfigureServices(services =>
-            //    {
-            //        services.AddRazorPages();
-            //    });
-            //var builderConfiguration = new ConfigurationBuilder()
-            //.SetBasePath(Directory.GetCurrentDirectory())
-            //.AddJsonFile("appsettings.json"); //1
-            //var config = builderConfiguration.Build(); // 1
-
-            //builder.Services.AddControllersWithViews();
-
-            //using (var scope = host.Build().Services.CreateScope()) //2
-            //{
-            //    var services = scope.ServiceProvider;
-
-            //    builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
-
-            //    var factory = services.GetRequiredService<IRepositoryContextFactory>();
-
-            //    factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate(); // 3
-            //}
-
-            //host.Build().Run();
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
             var builderConfiguration = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
-            var config = builderConfiguration.Build();
+            var config = builderConfiguration.Build(); // 1
             var app = builder.Build();
-            using (var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())  //2
             {
-                
                 var db = scope.ServiceProvider.GetRequiredService<IRepositoryContextFactory>();
-                db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();
+                db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
 
-            //Db connection
-           // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
+            //Db connection withoutauto migrations
+            // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
             //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
-
-
-            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
