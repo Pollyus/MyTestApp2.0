@@ -1,15 +1,18 @@
 using DBRepository;
 using DBRepository.Interfaces;
 using DBRepository.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.HttpsPolicy;
 
 namespace MyTestApp
 {
     class Program
     {
-        public IConfiguration Configuration { get; }
-        public static async Task Main(string[] args)
+      
+        public static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +23,52 @@ namespace MyTestApp
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddDbContext<RepositoryDbContext>(
-            //    o => o.UseNpgsql(provider => new TestRepository (builder.Configuration.GetConnectionString("MyTestsDb"), provider.GetService<IRepositoryContextFactory>()));
-            builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
-            builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
-           // DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
-            //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=delete2;Username=postgres;Password=postgres");
 
+            //Auto-migrations
+
+            //var host = Host.CreateDefaultBuilder(args)
+            //    .ConfigureServices(services =>
+            //    {
+            //        services.AddRazorPages();
+            //    });
+            //var builderConfiguration = new ConfigurationBuilder()
+            //.SetBasePath(Directory.GetCurrentDirectory())
+            //.AddJsonFile("appsettings.json"); //1
+            //var config = builderConfiguration.Build(); // 1
+
+            //builder.Services.AddControllersWithViews();
+
+            //using (var scope = host.Build().Services.CreateScope()) //2
+            //{
+            //    var services = scope.ServiceProvider;
+
+            //    builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
+
+            //    var factory = services.GetRequiredService<IRepositoryContextFactory>();
+
+            //    factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate(); // 3
+            //}
+
+            //host.Build().Run();
+            builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
+            var builderConfiguration = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory())
+                  .AddJsonFile("appsettings.json"); //1
+            var config = builderConfiguration.Build();
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                
+                var db = scope.ServiceProvider.GetRequiredService<IRepositoryContextFactory>();
+                db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();
+            }
+
+            //Db connection
+           // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
+            //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
+
+
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -37,9 +78,6 @@ namespace MyTestApp
             }
 
             //builder.Services.AddMvc();
-
-            
-
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
@@ -47,6 +85,9 @@ namespace MyTestApp
             app.MapControllers();
 
             app.Run();
+            return Task.CompletedTask;
         }
     }
+
 }
+
