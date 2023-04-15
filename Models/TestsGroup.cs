@@ -11,6 +11,7 @@ namespace Models
         public int Id { get; set; }
         public string? xmlReport { get; set; }
         public int TestId { get; set; }
+        public virtual ICollection<Test> Tests { get; set;}
 
     }
 }

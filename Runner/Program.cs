@@ -117,7 +117,7 @@ namespace Runner
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri($"http://localhost:5271/api/report/load"),
+                    RequestUri = new Uri($"http://localhost:7180/api/report/load"),
                     Content = new StringContent(JsonConvert.SerializeObject(report), Encoding.UTF8, "application/json")
                 };
 
@@ -139,6 +139,8 @@ namespace Runner
             {
                 Log.Logger.Error(ex.Message);
             }
+
+            
         }
     }
 }

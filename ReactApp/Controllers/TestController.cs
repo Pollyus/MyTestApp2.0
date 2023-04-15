@@ -1,9 +1,8 @@
 ﻿using DBRepository.Interfaces;
-using DBRepository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Models;
+using ReactApp.ViewModels;
 
 namespace ReactApp.Controllers
 {
@@ -44,7 +43,7 @@ namespace ReactApp.Controllers
         [NonAction]
         [Route("test")]
         [HttpDelete("delete")]
-        public async Task DeletePost(int testId)
+        public async Task DeleteTest(int testId)
         {
             await _testRepository.DeleteTest(testId);
         }

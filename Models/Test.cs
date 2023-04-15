@@ -15,5 +15,9 @@ namespace Models
         public string Job { get; set; }
         public string? xmlReport { get; set; }
         public int UserId { get; set; }
+        public int TestGroupId { get; set; }
+        public TestsGroup TestsGroup { get; set; }
+        public User User { get; set; }
+        public virtual ICollection<Comment> Comments { get; set;}
     }
 }
