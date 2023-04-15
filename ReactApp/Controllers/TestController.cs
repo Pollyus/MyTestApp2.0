@@ -1,5 +1,6 @@
 ﻿using DBRepository.Interfaces;
 using DBRepository.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Models;
@@ -32,6 +33,7 @@ namespace ReactApp.Controllers
         }
 
         [NonAction]
+        [Authorize]
         [Route("test")]
         [HttpPost("add")]
         public async Task AddTest(Test test)
