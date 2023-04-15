@@ -1,13 +1,8 @@
-using DBRepository;
-using DBRepository.Interfaces;
-using DBRepository.Repositories;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.HttpsPolicy;
 
-namespace MyTestApp
+using DBRepository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace ReactApp
 {
     class Program
     {
@@ -37,7 +32,18 @@ namespace MyTestApp
                 var db = scope.ServiceProvider.GetRequiredService<IRepositoryContextFactory>();
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
+            
+            // Add services to the container.
 
+            builder.Services.AddControllersWithViews();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            
             //Db connection withoutauto migrations
             // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
             //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
@@ -59,6 +65,9 @@ namespace MyTestApp
 
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
+            
+            app.UseStaticFiles();
+            app.UseRouting();
 
             app.UseAuthorization();
 
@@ -68,6 +77,4 @@ namespace MyTestApp
             return Task.CompletedTask;
         }
     }
-
 }
-

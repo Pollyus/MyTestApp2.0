@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Runner": {
+      "commandName": "Project",
+      "commandLineArgs": "--i 1 --j 20 --p \"C:\\Учеба\\Практика\\MyCalc\\MyCalcTests\\bin\\Debug\\net6.0\\MyCalcTests.dll\"  "
+
+    }
+  }
+}

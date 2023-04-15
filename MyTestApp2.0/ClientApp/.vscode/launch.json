@@ -1,0 +1,15 @@
+{
+  // »спользуйте IntelliSense, чтобы узнать о возможных атрибутах.
+  // Ќаведите указатель мыши, чтобы просмотреть описани€ существующих атрибутов.
+  // ƒл€ получени€ дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Launch Chrome against localhost",
+      "url": "http://localhost:44489",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
