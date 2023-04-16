@@ -1,6 +1,6 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
-import { Home } from "./components/Home";
+import { Counter } from "../Counter";
+import { FetchData } from "../FetchData";
+import { Home } from "../Home";
 
 const AppRoutes = [
   {
