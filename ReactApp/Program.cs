@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ReactApp.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -31,27 +32,7 @@ namespace ReactApp
 
             //работа jwt-токена 
             builder.Services.AddAuthorization();
-            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            // указывает, будет ли валидироваться издатель при валидации токена
-            //            ValidateIssuer = true,
-            //            // строка, представляющая издателя
-            //            ValidIssuer = AuthOptions.ISSUER,
-            //            // будет ли валидироваться потребитель токена
-            //            ValidateAudience = true,
-            //            // установка потребителя токена
-            //            ValidAudience = AuthOptions.AUDIENCE,
-            //            // будет ли валидироваться время существования
-            //            ValidateLifetime = true,
-            //            // установка ключа безопасности
-            //            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            //            // валидация ключа безопасности
-            //            ValidateIssuerSigningKey = true,
-            //        };
-            //    });
+       
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -71,6 +52,9 @@ namespace ReactApp
             builder.Services.AddScoped<ITestRepository>(provider => new
                     TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
                     provider.GetService<IRepositoryContextFactory>()));
+            builder.Services.AddScoped<IIdentityRepository, IdentityRepository>(); 
+            builder.Services.AddScoped<IReportRepository, ReportRepository>();
+            
 
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -86,6 +70,7 @@ namespace ReactApp
             }
 
             
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -118,23 +103,7 @@ namespace ReactApp
 
             app.MapFallbackToFile("index.html"); ;
 
-            //app.Map("/login/{username}", (string username) =>
-            //{
-            //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
-            //    // создаем JWT-токен
-            //    var jwt = new JwtSecurityToken(
-            //            issuer: AuthOptions.ISSUER,
-            //            audience: AuthOptions.AUDIENCE,
-            //            claims: claims,
-            //            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
-            //            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            //    return new JwtSecurityTokenHandler().WriteToken(jwt);
-            //});
-
-            //app.Map("/data", [Authorize] () => new { message = "Hello World!" });
-
-
+          
 
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
@@ -149,13 +118,6 @@ namespace ReactApp
             app.Run();
             return Task.CompletedTask;
         }
-        //public class AuthOptions
-        //{
-        //    public const string ISSUER = "MyAuthServer"; // издатель токена
-        //    public const string AUDIENCE = "MyAuthClient"; // потребитель токена
-        //    const string KEY = "mysupersecret_secretkey!123";   // ключ для шифрации
-        //    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-        //        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
-        //}
+        
     }
 }

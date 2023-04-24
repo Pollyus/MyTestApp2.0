@@ -15,10 +15,12 @@ namespace ReactApp.Controllers
     public class IdentityController : Controller
     {
         IIdentityService _service;
+        private readonly ILogger<WeatherForecastController> _logger;
 
-        public IdentityController(IIdentityService service)
+        public IdentityController(IIdentityService service, ILogger<WeatherForecastController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [Route("token")]
