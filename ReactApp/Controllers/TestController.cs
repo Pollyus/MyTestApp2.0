@@ -7,6 +7,7 @@ using ReactApp.ViewModels;
 namespace ReactApp.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class TestController : Controller
     {
         ITestRepository _testRepository;

@@ -1,74 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using static ReactApp.Program;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using ReactApp.ViewModels;
 using ReactApp.Services.Interfaces;
-using System.Security.Cryptography;
-using ReactApp.Helpers;
 
 namespace ReactApp.Controllers
 {
-    [Route("api/[controller]")]
-    public class IdentityController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class IdentityController : ControllerBase
     {
-        IIdentityService _service;
+        private readonly IIdentityService _userService;
 
-        public IdentityController(IIdentityService service)
+        public IdentityController(IIdentityService userService)
         {
-            _service = service;
+            _userService = userService;
         }
 
-        [Route("token")]
-        [HttpPost]
-        public async Task<IActionResult> Token([FromBody] IdentityViewModel model)
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(IdentityViewModel model)
         {
-            var identity = await GetIdentity(model.Username, model.Password);
-            if (identity == null)
-            {
-                return Unauthorized();
-            }
+            var response = _userService.Authenticate(model);
 
-            var now = DateTime.UtcNow;
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
-            {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
+            if (response == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
 
             return Ok(response);
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string userName, string password)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserViewModel userModel)
         {
-            ClaimsIdentity identity = null;
-            var user = await _service.GetUser(userName);
-            if (user != null)
+            var response = await _userService.Register(userModel);
+
+            if (response == null)
             {
-                var sha256 = new SHA256Managed();
-                var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-                if (passwordHash == user.Password)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
-                    };
-                    identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-                }
+                return BadRequest(new { message = "Didn't register!" });
             }
-            return identity;
+
+            return Ok(response);
         }
+
+        [Helpers.Authorize]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _userService.GetAll();
+            return Ok(users);
+        }
+
     }
 }

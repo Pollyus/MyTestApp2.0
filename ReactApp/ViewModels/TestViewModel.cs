@@ -1,6 +1,6 @@
 ﻿namespace ReactApp.ViewModels
 {
-    public class TestModel
+    public class TestViewModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

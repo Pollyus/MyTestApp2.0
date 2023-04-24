@@ -9,16 +9,38 @@ using System.Threading.Tasks;
 
 namespace DBRepository.Repositories
 {
-    public class IdentityRepository : BaseRepository, IIdentityRepository
+    public class IdentityRepository<T> : IIdentityRepository<T> where T: BaseEntity 
     {
-        public IdentityRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
+        private readonly RepositoryDbContext _context;
 
-        public async Task<User> GetUser(string userName)
+        public IdentityRepository(RepositoryDbContext context)
         {
-            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            _context = context;
+        }
+
+        public List<T> GetAll()
+        {
+            return _context.Set<T>().ToList();
+        }
+
+        public T GetById(long id)
+        {
+            var result = _context.Set<T>().FirstOrDefault(x => x.Id == id);
+
+            if (result == null)
             {
-                return await context.Users.FirstOrDefaultAsync(u => u.Login == userName);
+                //todo: need to add logger
+                return null;
             }
+
+            return result;
+        }
+
+        public async Task<long> Add(T entity)
+        {
+            var result = await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return result.Entity.Id;
         }
     }
 }

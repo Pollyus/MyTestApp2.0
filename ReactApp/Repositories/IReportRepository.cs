@@ -5,10 +5,10 @@ namespace ReactApp.Repositories
     public interface IReportRepository
     {
         //Добавление отчета
-        bool AddReport(TestModel report);
+        bool AddReport(TestViewModel report);
 
         //Коллекция отчетов
-        ICollection<TestModel> Reports();
+        ICollection<TestViewModel> Reports();
 
     }
 }

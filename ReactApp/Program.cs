@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ReactApp.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
+using ReactApp.Services.Interfaces;
+using ReactApp.Services.Implementation;
 
 namespace ReactApp
 {
@@ -28,9 +32,14 @@ namespace ReactApp
 
             builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
             //app.UseMvc();
+            // добавление сервисов аутентификации
+            //builder.Services.AddAuthentication("Bearer")  // схема аутентификации - с помощью jwt-токенов
+            //    .AddJwtBearer();      // подключение аутентификации с помощью jwt-токенов
 
             //работа jwt-токена 
             builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+
             //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //    .AddJwtBearer(options =>
             //    {
@@ -52,6 +61,18 @@ namespace ReactApp
             //            ValidateIssuerSigningKey = true,
             //        };
             //    });
+            // 
+            //builder.Services.AddScoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>));
+            //mapper
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new UserProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
+            //builder.Services.AddScoped<IIdentityService, IdentityService>();
+            //builder.Services.AddSingleton<IdentityService, IdentityService>();
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -59,14 +80,23 @@ namespace ReactApp
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = "ValidIssuer",
-                    ValidAudience = "ValidateAudience",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("IssuerSigningSecretKey")),
+                    // указывает, будет ли валидироватьс€ издатель при валидации токена
+                    ValidateIssuer = true,
+                    // строка, представл€юща€ издател€
+                    ValidIssuer = AuthOptions.ISSUER,
+                    // будет ли валидироватьс€ потребитель токена
+                    ValidateAudience = true,
+                    // установка потребител€ токена
+                    ValidAudience = AuthOptions.AUDIENCE,
+                    // будет ли валидироватьс€ врем€ существовани€
                     ValidateLifetime = true,
+                    // установка ключа безопасности
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    // валидаци€ ключа безопасности
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero
                 };
             });
+           
             builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             builder.Services.AddScoped<ITestRepository>(provider => new
                     TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -86,6 +116,7 @@ namespace ReactApp
             }
 
             
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -96,13 +127,49 @@ namespace ReactApp
                 app.UseHsts();
             }
 
+            //builder.Services.AddScoped<IIdentityService, IdentityService>();
+            app.UseMiddleware<JwtMiddleware>();
+            //app.UseEndpoints(x => x.MapControllers());
+
             //Db connection withoutauto migrations
             // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
             //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
+
+            app.UseStaticFiles();
+            app.UseAuthentication();// добавление middleware аутентификации 
+            app.UseAuthorization();// добавление middleware авторизации 
+
+
+          
+
+            app.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+
+            app.MapFallbackToFile("index.html"); ;
+
+            app.Map("/login/{username}", (string username) =>
+            {
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+                // создаем JWT-токен
+                var jwt = new JwtSecurityToken(
+                        issuer: AuthOptions.ISSUER,
+                        audience: AuthOptions.AUDIENCE,
+                        claims: claims,
+                        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+                        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+                return new JwtSecurityTokenHandler().WriteToken(jwt);
+            });
+
+            //app.Map("/data", [Authorize] () => new { message = "Hello World!" });
+
+
+            //builder.Services.AddMvc();
+            app.UseHttpsRedirection();
             
             app.UseStaticFiles();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseRouting();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -112,50 +179,12 @@ namespace ReactApp
                 app.UseSwaggerUI();
             }
 
-            app.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-
-            app.MapFallbackToFile("index.html"); ;
-
-            //app.Map("/login/{username}", (string username) =>
-            //{
-            //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
-            //    // создаем JWT-токен
-            //    var jwt = new JwtSecurityToken(
-            //            issuer: AuthOptions.ISSUER,
-            //            audience: AuthOptions.AUDIENCE,
-            //            claims: claims,
-            //            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
-            //            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            //    return new JwtSecurityTokenHandler().WriteToken(jwt);
-            //});
-
-            //app.Map("/data", [Authorize] () => new { message = "Hello World!" });
-
-
-
-            //builder.Services.AddMvc();
-            app.UseHttpsRedirection();
-            
-            app.UseStaticFiles();
-            app.UseRouting();
-
-            
 
             app.MapControllers();
 
             app.Run();
             return Task.CompletedTask;
         }
-        //public class AuthOptions
-        //{
-        //    public const string ISSUER = "MyAuthServer"; // издатель токена
-        //    public const string AUDIENCE = "MyAuthClient"; // потребитель токена
-        //    const string KEY = "mysupersecret_secretkey!123";   // ключ дл€ шифрации
-        //    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-        //        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
-        //}
+       
     }
 }

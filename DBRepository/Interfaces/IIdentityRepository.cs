@@ -3,8 +3,10 @@
 
 namespace DBRepository.Interfaces
 {
-    public interface IIdentityRepository
+    public interface IIdentityRepository<T> where T : BaseEntity
     {
-        Task<User> GetUser(string userName);
+        List<T> GetAll();
+        T GetById(long id);
+        Task<long> Add(T entity);
     }
 }

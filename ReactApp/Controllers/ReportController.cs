@@ -29,7 +29,7 @@ namespace ReactApp.Controllers
 
         //Загрузка отчетов на сервер
         [HttpPost("load")]
-        public Task<IActionResult> UploadFile([FromBody] TestModel testReport)
+        public Task<IActionResult> UploadFile([FromBody] TestViewModel testReport)
         {
             //return Task.FromResult<IActionResult>(_repository.AddReport(testReport) ? Ok() : StatusCode(StatusCodes.Status500InternalServerError));
             if (_repository.AddReport(testReport))
@@ -42,7 +42,5 @@ namespace ReactApp.Controllers
             }
 
         }
-
-
     }
 }

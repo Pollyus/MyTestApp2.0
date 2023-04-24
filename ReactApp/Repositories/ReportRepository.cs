@@ -6,17 +6,17 @@ namespace ReactApp.Repositories
     //Репозиторий отчетов
     public class ReportRepository : IReportRepository
     {
-        private readonly ConcurrentDictionary<string, TestModel> _reports = new();
+        private readonly ConcurrentDictionary<string, TestViewModel> _reports = new();
         //private TestAppDbContext dataBase;
 
         //Отчеты
-        public ICollection<TestModel> Reports()
+        public ICollection<TestViewModel> Reports()
         {
             return _reports.Values;
         }
 
         //Добавление отчетов в репозиторий
-        public bool AddReport(TestModel report)
+        public bool AddReport(TestViewModel report)
         {
             return _reports.TryAdd(report.Job, report);
         }

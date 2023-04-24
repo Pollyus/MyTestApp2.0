@@ -14,6 +14,9 @@ namespace DBRepository
         public DbSet<TestsGroup> TestsGroups { get; set; }
         public DbSet<User> Users { get; set; }
 
-        
+        public async Task<int> SaveChangesAsync()
+        {
+            return await base.SaveChangesAsync();
+        }
     }
 }
