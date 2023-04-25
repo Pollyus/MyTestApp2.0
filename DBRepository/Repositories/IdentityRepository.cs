@@ -67,5 +67,12 @@ namespace DBRepository.Repositories
                 return await context.Users.FirstOrDefaultAsync(u => u.Login == userName);
             }
         }
+        public async Task<User> GetById(int id)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            }
+        }
     }
 }

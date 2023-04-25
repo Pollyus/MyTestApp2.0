@@ -40,29 +40,6 @@ namespace ReactApp
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 
-            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            // указывает, будет ли валидироваться издатель при валидации токена
-            //            ValidateIssuer = true,
-            //            // строка, представляющая издателя
-            //            ValidIssuer = AuthOptions.ISSUER,
-            //            // будет ли валидироваться потребитель токена
-            //            ValidateAudience = true,
-            //            // установка потребителя токена
-            //            ValidAudience = AuthOptions.AUDIENCE,
-            //            // будет ли валидироваться время существования
-            //            ValidateLifetime = true,
-            //            // установка ключа безопасности
-            //            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            //            // валидация ключа безопасности
-            //            ValidateIssuerSigningKey = true,
-            //        };
-            //    });
-            // 
-            //builder.Services.AddScoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>));
             //mapper
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -104,6 +81,8 @@ namespace ReactApp
             builder.Services.AddScoped<IIdentityRepository>(provider => new
                     IdentityRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
                     provider.GetService<IRepositoryContextFactory>()));
+            
+            
 
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -130,7 +109,7 @@ namespace ReactApp
                 app.UseHsts();
             }
 
-            //builder.Services.AddScoped<IIdentityService, IdentityService>();
+            
             app.UseMiddleware<JwtMiddleware>();
             //app.UseEndpoints(x => x.MapControllers());
 

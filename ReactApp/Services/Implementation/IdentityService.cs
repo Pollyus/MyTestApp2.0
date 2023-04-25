@@ -81,5 +81,9 @@ namespace ReactApp.Services.Implementation
         {
             return await _repository.GetUser(userName);
         }
+        public async Task<User> GetById(int id)
+        {
+            return await _repository.GetById(id);
+        }
     }
 }
