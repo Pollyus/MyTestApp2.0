@@ -101,6 +101,9 @@ namespace ReactApp
             builder.Services.AddScoped<ITestRepository>(provider => new
                     TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
                     provider.GetService<IRepositoryContextFactory>()));
+            builder.Services.AddScoped<IIdentityRepository>(provider => new
+                    IdentityRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    provider.GetService<IRepositoryContextFactory>()));
 
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
