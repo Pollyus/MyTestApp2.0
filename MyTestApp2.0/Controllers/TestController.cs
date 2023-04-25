@@ -7,6 +7,7 @@ using Models;
 namespace MyTestApp2.Controllers
 {
     [Route("api/[controller]")]
+    [Consumes("application/json")]
     public class TestController : Controller
     {
         ITestRepository _testRepository;
@@ -14,8 +15,7 @@ namespace MyTestApp2.Controllers
         {
             _testRepository = testRepository;
         }
-
-        [NonAction]
+        
         [Route("test")]
         [HttpGet("get")]
         public async Task<Test> GetTest(int testId)
@@ -23,7 +23,7 @@ namespace MyTestApp2.Controllers
             return await _testRepository.GetTest(testId);
         }
 
-        [NonAction]
+        
         [Route("test")]
         [HttpGet("get/all")]
         public IActionResult GetAllTests()
@@ -31,7 +31,7 @@ namespace MyTestApp2.Controllers
             return (IActionResult)_testRepository.GetAllTests();
         }
 
-        [NonAction]
+        
         [Route("test")]
         [HttpPost("add")]
         public async Task AddTest(Test test)
@@ -39,7 +39,7 @@ namespace MyTestApp2.Controllers
             await _testRepository.AddTest(test);
         }
 
-        [NonAction]
+        
         [Route("test")]
         [HttpDelete("delete")]
         public async Task DeletePost(int testId)

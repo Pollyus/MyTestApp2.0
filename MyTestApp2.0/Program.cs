@@ -6,6 +6,9 @@ using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.HttpsPolicy;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.OpenApi.Models;
 
 namespace MyTestApp
 {
@@ -22,7 +25,15 @@ namespace MyTestApp
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddControllers();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyTestService", Version = "v1", });
+            });
 
+                    
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ITestRepository, TestRepository>();
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
             var builderConfiguration = new ConfigurationBuilder()
@@ -36,6 +47,9 @@ namespace MyTestApp
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
 
+            
+
+
             //Db connection withoutauto migrations
             // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
             //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
@@ -47,11 +61,19 @@ namespace MyTestApp
                 app.UseSwaggerUI();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./v1/swagger.json", "My API V1"); //originally "./swagger/v1/swagger.json"
+            });
+
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
 
+
+            app.UseAuthorization();
+            app.UseDeveloperExceptionPage();
             app.MapControllers();
 
             app.Run();
