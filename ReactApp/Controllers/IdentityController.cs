@@ -8,6 +8,7 @@ using ReactApp.ViewModels;
 using ReactApp.Services.Interfaces;
 using System.Security.Cryptography;
 using ReactApp.Helpers;
+using DBRepository.Interfaces;
 
 namespace ReactApp.Controllers
 {
@@ -16,11 +17,13 @@ namespace ReactApp.Controllers
     {
         IIdentityService _service;
         private readonly ILogger<WeatherForecastController> _logger;
+        IIdentityRepository _repository;
 
-        public IdentityController(IIdentityService service, ILogger<WeatherForecastController> logger)
+        public IdentityController(IIdentityService service, ILogger<WeatherForecastController> logger, IIdentityRepository repository)
         {
             _service = service;
             _logger = logger;
+            _repository = repository;
         }
 
         [Route("token")]

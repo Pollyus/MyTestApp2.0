@@ -28,7 +28,7 @@ namespace ReactApp
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
-            //app.UseMvc();
+            
 
             //работа jwt-токена 
             builder.Services.AddAuthorization();
@@ -52,9 +52,10 @@ namespace ReactApp
             builder.Services.AddScoped<ITestRepository>(provider => new
                     TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
                     provider.GetService<IRepositoryContextFactory>()));
+            builder.Services.AddScoped <IRepositoryContextFactory, RepositoryContextFactory>();
             builder.Services.AddScoped<IIdentityRepository, IdentityRepository>(); 
             builder.Services.AddScoped<IReportRepository, ReportRepository>();
-            
+            builder.Services.AddControllers();
 
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -62,6 +63,7 @@ namespace ReactApp
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
             var config = builderConfiguration.Build(); // 1
+            
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())  //2
             {
@@ -69,8 +71,8 @@ namespace ReactApp
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
 
-            
-
+            builder.Services.AddMvc();
+            builder.Services.AddHttpContextAccessor();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -103,9 +105,9 @@ namespace ReactApp
 
             app.MapFallbackToFile("index.html"); ;
 
-          
+            app.UseMvc();
 
-            //builder.Services.AddMvc();
+            
             app.UseHttpsRedirection();
             
             app.UseStaticFiles();
