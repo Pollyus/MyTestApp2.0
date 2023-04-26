@@ -3,6 +3,7 @@ using DBRepository.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Models;
+using MyTestApp2._0.ViewModels;
 
 namespace MyTestApp2.Controllers
 {

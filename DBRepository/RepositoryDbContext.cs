@@ -13,7 +13,8 @@ namespace DBRepository
         public DbSet<Test> Tests { get; set; }
         public DbSet<TestsGroup> TestsGroups { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Project> Projects { get; set; }
         
     }
 }

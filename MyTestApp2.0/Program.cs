@@ -23,17 +23,17 @@ namespace MyTestApp
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
-            builder.Services.AddControllers();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyTestService", Version = "v1", });
             });
 
-                    
+
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<ITestRepository, TestRepository>();
+            builder.Services.AddScoped<ITestRepository>(provider => new
+                    TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    provider.GetService<IRepositoryContextFactory>()));
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
             var builderConfiguration = new ConfigurationBuilder()
@@ -47,7 +47,7 @@ namespace MyTestApp
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
 
-            
+
 
 
             //Db connection withoutauto migrations
@@ -70,6 +70,7 @@ namespace MyTestApp
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
 
+            ///https://github.com/swagger-api/swagger-ui/issues/5972
 
 
             app.UseAuthorization();
