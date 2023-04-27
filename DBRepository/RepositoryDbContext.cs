@@ -8,11 +8,6 @@ namespace DBRepository
     {
         public RepositoryDbContext(DbContextOptions<RepositoryDbContext> options) : base(options)
         {
-
-            //var optionsBuilder = new DbContextOptionsBuilder<RepositoryDbContext>();
-            //optionsBuilder.UseNpgsql(connectionString);
-            //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //return new RepositoryDbContext(optionsBuilder.Options);
         }
 
         public DbSet<TeamLeader> TeamLeaders { get; set; }

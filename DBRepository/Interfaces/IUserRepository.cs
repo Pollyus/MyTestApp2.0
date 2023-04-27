@@ -1,15 +1,14 @@
 ﻿using DBRepository.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBRepository.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository// : IRepositoryCrud<User>
     {
-        Task<User> GetUser(int userId);
+        Task<User> GetUser(int id);
+        List<UserViewModel> GetAllUsers();
+        Task AddUser(User user);
+        Task DeleteUser(int userId);
     }
 }

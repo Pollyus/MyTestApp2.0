@@ -25,9 +25,9 @@ namespace MyTestApp2.Controllers
         
         [Route("test")]
         [HttpGet("get/all")]
-        public IActionResult GetAllTests()
+        public List<TestViewModel> GetAllTests()
         {
-            return (IActionResult)_testRepository.GetAllTests();
+            return _testRepository.GetAllTests();
         }
 
         
