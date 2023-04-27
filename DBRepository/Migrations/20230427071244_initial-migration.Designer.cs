@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DBRepository.Migrations
 {
     [DbContext(typeof(RepositoryDbContext))]
-    [Migration("20230425205337_initial-migration")]
+    [Migration("20230427071244_initial-migration")]
     partial class initialmigration
     {
         /// <inheritdoc />
@@ -34,7 +34,6 @@ namespace DBRepository.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CommentId"));
 
                     b.Property<string>("Body")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreateDate")
@@ -100,6 +99,9 @@ namespace DBRepository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Job")
                         .IsRequired()
                         .HasColumnType("text");
@@ -114,12 +116,6 @@ namespace DBRepository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("TestGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TestsGroupId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
@@ -128,7 +124,7 @@ namespace DBRepository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestsGroupId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("UserId");
 
@@ -143,10 +139,13 @@ namespace DBRepository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TeamLeaderId")
+                    b.Property<int>("TeamLeaderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.Property<string>("xmlReport")
@@ -157,6 +156,8 @@ namespace DBRepository.Migrations
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("TeamLeaderId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TestsGroups");
                 });
@@ -177,9 +178,6 @@ namespace DBRepository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -195,9 +193,6 @@ namespace DBRepository.Migrations
                     b.Property<int>("TeamLeaderId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TestsGroupId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -205,8 +200,6 @@ namespace DBRepository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TeamLeaderId");
-
-                    b.HasIndex("TestsGroupId");
 
                     b.ToTable("Users");
                 });
@@ -234,12 +227,12 @@ namespace DBRepository.Migrations
                 {
                     b.HasOne("Models.TestsGroup", "TestsGroup")
                         .WithMany("Tests")
-                        .HasForeignKey("TestsGroupId")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Models.User", "User")
-                        .WithMany()
+                        .WithMany("Tests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -251,13 +244,29 @@ namespace DBRepository.Migrations
 
             modelBuilder.Entity("Models.TestsGroup", b =>
                 {
-                    b.HasOne("Models.Project", null)
+                    b.HasOne("Models.Project", "Project")
                         .WithMany("TestsGroups")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Models.TeamLeader", null)
+                    b.HasOne("Models.TeamLeader", "TeamLeader")
                         .WithMany("TestsGroups")
-                        .HasForeignKey("TeamLeaderId");
+                        .HasForeignKey("TeamLeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.User", "User")
+                        .WithMany("TestsGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("TeamLeader");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -268,15 +277,7 @@ namespace DBRepository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.TestsGroup", "TestsGroup")
-                        .WithMany()
-                        .HasForeignKey("TestsGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("TeamLeader");
-
-                    b.Navigation("TestsGroup");
                 });
 
             modelBuilder.Entity("Models.Project", b =>
@@ -304,6 +305,10 @@ namespace DBRepository.Migrations
             modelBuilder.Entity("Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Tests");
+
+                    b.Navigation("TestsGroups");
                 });
 #pragma warning restore 612, 618
         }

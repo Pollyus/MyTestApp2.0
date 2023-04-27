@@ -34,8 +34,11 @@ namespace MyTestApp
             builder.Services.AddScoped<ITestRepository>(provider => new
                     TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
                     provider.GetService<IRepositoryContextFactory>()));
+            builder.Services.AddScoped<IUserRepository>(provider => new
+                    UserRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    provider.GetService<IRepositoryContextFactory>()));
             //Auto-migrations
-            builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
+            builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             var builderConfiguration = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
@@ -46,9 +49,6 @@ namespace MyTestApp
                 var db = scope.ServiceProvider.GetRequiredService<IRepositoryContextFactory>();
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
-
-
-
 
             //Db connection withoutauto migrations
             // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1

@@ -40,31 +40,6 @@ namespace DBRepository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestsGroups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    xmlReport = table.Column<string>(type: "text", nullable: true),
-                    ProjectId = table.Column<int>(type: "integer", nullable: true),
-                    TeamLeaderId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestsGroups", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestsGroups_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TestsGroups_TeamLeaders_TeamLeaderId",
-                        column: x => x.TeamLeaderId,
-                        principalTable: "TeamLeaders",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -76,8 +51,6 @@ namespace DBRepository.Migrations
                     Login = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: false),
-                    TestsGroupId = table.Column<int>(type: "integer", nullable: false),
                     TeamLeaderId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -89,10 +62,38 @@ namespace DBRepository.Migrations
                         principalTable: "TeamLeaders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestsGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    xmlReport = table.Column<string>(type: "text", nullable: true),
+                    TeamLeaderId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestsGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_TestsGroups_TestsGroupId",
-                        column: x => x.TestsGroupId,
-                        principalTable: "TestsGroups",
+                        name: "FK_TestsGroups_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TestsGroups_TeamLeaders_TeamLeaderId",
+                        column: x => x.TeamLeaderId,
+                        principalTable: "TeamLeaders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TestsGroups_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,16 +109,15 @@ namespace DBRepository.Migrations
                     Pipeline = table.Column<string>(type: "text", nullable: false),
                     Job = table.Column<string>(type: "text", nullable: false),
                     xmlReport = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    TestGroupId = table.Column<int>(type: "integer", nullable: false),
-                    TestsGroupId = table.Column<int>(type: "integer", nullable: false)
+                    GroupId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tests_TestsGroups_TestsGroupId",
-                        column: x => x.TestsGroupId,
+                        name: "FK_Tests_TestsGroups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "TestsGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -135,7 +135,7 @@ namespace DBRepository.Migrations
                 {
                     CommentId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Body = table.Column<string>(type: "text", nullable: false),
+                    Body = table.Column<string>(type: "text", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TestId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false)
@@ -168,9 +168,9 @@ namespace DBRepository.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_TestsGroupId",
+                name: "IX_Tests_GroupId",
                 table: "Tests",
-                column: "TestsGroupId");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tests_UserId",
@@ -188,14 +188,14 @@ namespace DBRepository.Migrations
                 column: "TeamLeaderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TestsGroups_UserId",
+                table: "TestsGroups",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_TeamLeaderId",
                 table: "Users",
                 column: "TeamLeaderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_TestsGroupId",
-                table: "Users",
-                column: "TestsGroupId");
         }
 
         /// <inheritdoc />
@@ -208,13 +208,13 @@ namespace DBRepository.Migrations
                 name: "Tests");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "TestsGroups");
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "TeamLeaders");

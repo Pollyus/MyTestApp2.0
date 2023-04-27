@@ -1,6 +1,5 @@
-﻿using Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using DBRepository.ViewModels;
+using Models;
 
 namespace DBRepository.Interfaces
 {

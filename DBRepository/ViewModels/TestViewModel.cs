@@ -1,4 +1,4 @@
-﻿namespace MyTestApp2._0.ViewModels
+﻿namespace DBRepository.ViewModels
 {
     public class TestViewModel
     {

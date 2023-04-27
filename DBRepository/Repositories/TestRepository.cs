@@ -1,13 +1,14 @@
 ﻿using Models;
 using DBRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-//using Options;
+using DBRepository.ViewModels;
 
 namespace DBRepository.Repositories
 {
     public class TestRepository : BaseRepository, ITestRepository
     {
-        public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
+        public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) 
+        { }
         
         public async Task<Test> GetTest(int testId)
         {
@@ -29,6 +30,7 @@ namespace DBRepository.Repositories
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
+                
                 context.Tests.Add(test);
                 await context.SaveChangesAsync();
             }
