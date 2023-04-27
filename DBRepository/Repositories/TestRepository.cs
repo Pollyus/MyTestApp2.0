@@ -1,27 +1,43 @@
 ﻿using Models;
 using DBRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
+using DBRepository.ViewModels;
+using ReactApp.ViewModels;
 
 namespace DBRepository.Repositories
 {
     public class TestRepository : BaseRepository, ITestRepository
     {
-        public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-        
-        public async Task<Test> GetTest(int testId)
+        public TestRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) 
+        { }
+
+        public async Task<Test> GetTest(int TestId)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                return await context.Tests.Include(t => t.Name).Include(t => t.xmlReport).Include(t => t.UserId).FirstOrDefaultAsync(p => p.Id == testId);
+                Test result = null;
+                await foreach (Test test in context.Tests)
+                {
+
+                    if (test.Id == TestId) result = test;
+
+                }
+                return result;
+              
             }
         }
-
-        public async Task<List<string>> GetAllTests()
+        public List<TestViewModel> GetAllTests()
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                return await context.Tests.Include(t => t.xmlReport).Select(t => t.Name).Distinct().ToListAsync();
+                List<TestViewModel> data = new List<TestViewModel>();
+                foreach (Test test in context.Tests)
+                {
+                    TestViewModel viewModel = new TestViewModel();
+                    viewModel.Id = test.Id;
+                    data.Add(viewModel);
+                }
+                return data;
             }
         }
 
@@ -29,6 +45,7 @@ namespace DBRepository.Repositories
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
+                
                 context.Tests.Add(test);
                 await context.SaveChangesAsync();
             }
