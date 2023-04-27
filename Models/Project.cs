@@ -1,22 +1,18 @@
 ﻿
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace Models
 {
-    public class TeamLeader
+    public class Project
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int? Access { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
 
-        [InverseProperty(nameof(TestsGroup.TeamLeader))]
+        [InverseProperty(nameof(TestsGroup.Project))]
         public virtual List<TestsGroup> TestsGroups { get; set; }
-
-        [InverseProperty(nameof(User.TeamLeader))]
-        public virtual List<User> Users { get; set; }
     }
 }

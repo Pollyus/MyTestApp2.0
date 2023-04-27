@@ -1,13 +1,12 @@
-﻿using Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using DBRepository.ViewModels;
+using Models;
 
 namespace DBRepository.Interfaces
 {
-    public interface ITestRepository
+    public interface ITestRepository//: IRepositoryCrud<Test>
     {
         Task<Test> GetTest(int testId);
-        Task<List<string>> GetAllTests();
+        List<TestViewModel> GetAllTests();
         Task AddTest(Test test);
         Task DeleteTest(int testId);
 

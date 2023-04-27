@@ -1,4 +1,5 @@
 
+using DBRepository;
 using DBRepository.Interfaces;
 using DBRepository.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ReactApp.Repositories;
 using ReactApp.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,6 +24,7 @@ namespace ReactApp
         public static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            context = CreateDbContext()
 
             // Add services to the container.
 
@@ -35,11 +38,12 @@ namespace ReactApp
             // добавление сервисов аутентификации
             //builder.Services.AddAuthentication("Bearer")  // схема аутентификации - с помощью jwt-токенов
             //    .AddJwtBearer();      // подключение аутентификации с помощью jwt-токенов
+            
 
             //работа jwt-токена 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
-
+       
             //mapper
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -57,6 +61,9 @@ namespace ReactApp
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidIssuer = "ValidIssuer",
+                    ValidAudience = "ValidateAudience",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("IssuerSigningSecretKey")),
                     // указывает, будет ли валидироватьс€ издатель при валидации токена
                     ValidateIssuer = true,
                     // строка, представл€юща€ издател€
@@ -71,6 +78,7 @@ namespace ReactApp
                     IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                     // валидаци€ ключа безопасности
                     ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
            
@@ -83,6 +91,10 @@ namespace ReactApp
                     provider.GetService<IRepositoryContextFactory>()));
             
             
+            builder.Services.AddScoped <IRepositoryContextFactory, RepositoryContextFactory>();
+            builder.Services.AddScoped<IIdentityRepository>(_=>new IdentityRepository(builder.Configuration.GetConnectionString("DefaultConnection"), ); 
+            builder.Services.AddScoped<IReportRepository, ReportRepository>();
+            builder.Services.AddControllers();
 
             //Auto-migrations
             builder.Services.AddTransient<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -90,6 +102,7 @@ namespace ReactApp
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
             var config = builderConfiguration.Build(); // 1
+            
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())  //2
             {
@@ -97,8 +110,8 @@ namespace ReactApp
                 db.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();// 3
             }
 
-            
-
+            builder.Services.AddMvc();
+            builder.Services.AddHttpContextAccessor();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -116,13 +129,18 @@ namespace ReactApp
             //Db connection withoutauto migrations
             // builder.Services.AddSingleton<IRepositoryContextFactory, RepositoryContextFactory>(); // 1
             //builder.Services.AddScoped<ITestRepository>(provider => new TestRepository(builder.Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
-
+            
             app.UseStaticFiles();
-            app.UseAuthentication();// добавление middleware аутентификации 
-            app.UseAuthorization();// добавление middleware авторизации 
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-
-          
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseHsts();
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.MapControllerRoute(
                     name: "default",
@@ -146,7 +164,7 @@ namespace ReactApp
 
             //app.Map("/data", [Authorize] () => new { message = "Hello World!" });
 
-
+            
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
             
@@ -160,13 +178,13 @@ namespace ReactApp
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
 
             app.MapControllers();
 
             app.Run();
             return Task.CompletedTask;
         }
-       
+        
     }
 }

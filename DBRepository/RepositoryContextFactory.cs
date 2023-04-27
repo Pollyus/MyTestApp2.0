@@ -8,7 +8,7 @@ public class RepositoryContextFactory : IRepositoryContextFactory
     {
         var optionsBuilder = new DbContextOptionsBuilder<RepositoryDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
-
+        //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         return new RepositoryDbContext(optionsBuilder.Options);
     }
 }
