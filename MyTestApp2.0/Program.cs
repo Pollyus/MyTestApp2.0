@@ -2,13 +2,18 @@ using DBRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using DBRepository.Repositories.AppRepositories;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 
 namespace MyTestApp
 {
     class Program
     {
+        
         public static Task Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -20,6 +25,12 @@ namespace MyTestApp
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyTestService", Version = "v1", });
+            });
+
+            builder.Services.AddMvc(option => option.EnableEndpointRouting = false);
+            builder.Services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/my-app/build";
             });
 
 
@@ -55,16 +66,30 @@ namespace MyTestApp
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("./v1/swagger.json", "My API V1"); //originally "./swagger/v1/swagger.json"
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("./v1/swagger.json", "My API V1"); //originally "./swagger/v1/swagger.json"
+            //});
 
             //builder.Services.AddMvc();
             app.UseHttpsRedirection();
 
-            ///https://github.com/swagger-api/swagger-ui/issues/5972
+            
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseMvc();
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = Path.Join(app.Environment.ContentRootPath, "ClientApp/my-app");
+
+                if (app.Environment.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                  
+                }
+            });
 
             app.UseAuthorization();
             app.UseDeveloperExceptionPage();
