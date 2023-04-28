@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBRepository
+namespace DBRepository.Repositories.DbRepositories
 {
     public class DesignTimeRepositoryContextFactory :
     IDesignTimeDbContextFactory<RepositoryDbContext>

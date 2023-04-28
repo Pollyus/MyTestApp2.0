@@ -1,14 +1,7 @@
-using DBRepository;
 using DBRepository.Interfaces;
-using DBRepository.Repositories;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.HttpsPolicy;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.OpenApi.Models;
+using DBRepository.Repositories.AppRepositories;
 
 namespace MyTestApp
 {

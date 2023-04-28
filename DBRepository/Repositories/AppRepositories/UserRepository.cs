@@ -3,7 +3,7 @@ using DBRepository.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
-namespace DBRepository.Repositories
+namespace DBRepository.Repositories.AppRepositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
@@ -19,7 +19,7 @@ namespace DBRepository.Repositories
                 {
 
                     if (user.Id == UserId) result = user;
-                    
+
                 }
                 return result;
                 //return await context.Users.Where(u => u.Id == UserId).Single();

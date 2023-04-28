@@ -2,7 +2,7 @@
 using Models;
 
 
-namespace DBRepository
+namespace DBRepository.Repositories.DbRepositories
 {
     public class RepositoryDbContext : DbContext
     {
@@ -16,6 +16,6 @@ namespace DBRepository
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Project> Projects { get; set; }
-        
+
     }
 }

@@ -1,8 +1,9 @@
 ﻿using DBRepository.Interfaces;
+using DBRepository.Repositories.DbRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace DBRepository.Repositories
+namespace DBRepository.Repositories.AppRepositories
 {
     public class RepositoryCrud<T> : IRepositoryCrud<T> where T : class
     {

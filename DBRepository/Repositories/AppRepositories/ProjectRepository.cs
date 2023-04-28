@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBRepository.Repositories
+namespace DBRepository.Repositories.AppRepositories
 {
     internal class ProjectRepository
     {
