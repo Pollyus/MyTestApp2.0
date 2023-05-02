@@ -1,4 +1,4 @@
-﻿namespace DBRepository.ViewModels
+﻿namespace BLL.ViewModels
 {
     public class TestViewModel
     {

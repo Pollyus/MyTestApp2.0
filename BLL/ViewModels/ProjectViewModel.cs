@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBRepository.ViewModels
+namespace BLL.ViewModels
 {
-    public class TeamLeaderViewModel
+    public class ProjectViewModel
     {
         public int Id { get; set; }
-        public int? Access { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
     }
 }

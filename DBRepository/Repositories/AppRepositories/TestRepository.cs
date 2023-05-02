@@ -1,7 +1,7 @@
 ﻿using Models;
 using DBRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using DBRepository.ViewModels;
+using BLL.ViewModels;
 
 namespace DBRepository.Repositories.AppRepositories
 {

@@ -1,4 +1,4 @@
-﻿using DBRepository.ViewModels;
+﻿using BLL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 

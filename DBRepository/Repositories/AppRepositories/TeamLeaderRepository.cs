@@ -1,12 +1,6 @@
-﻿using DBRepository.Interfaces;
-using DBRepository.ViewModels;
-using Microsoft.EntityFrameworkCore.Internal;
+﻿using BLL.ViewModels;
+using DBRepository.Interfaces;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBRepository.Repositories.AppRepositories
 {
