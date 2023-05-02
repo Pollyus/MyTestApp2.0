@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BLL.ViewModels;
+using Models;
 
 namespace DBRepository.Interfaces
 {
-    internal class IProjectRepository
+    public interface IProjectRepository
     {
+        Task<Project> GetProject(int id);
+        List<ProjectViewModel> GetAllProjects();
+        Task AddProject(Project project);
+        Task DeleteProject(int projectId);
     }
 }

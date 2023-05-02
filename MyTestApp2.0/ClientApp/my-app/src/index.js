@@ -9,9 +9,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Button, Container } from "@mui/material";
 
 import Profile from './Profile/Profile';
+import Project from './Project/project';
 
 const App = () => {
-
+  
   // const [catalog, setCatalog] = useState([]);
   // const [cart, setCart] = useState([]);
 
@@ -19,27 +20,28 @@ const App = () => {
   // const childRef = useRef()
   
   // const updateCatalog = (attributes) => childRef.current.updateCatalog(attributes);
-
+ 
   return (
     <Container>
       <BrowserRouter>
         <Header/>
         <Routes>
-          {/* <Route path="/" exact 
+          <Route path="/" exact 
             element={
-              <div>
-                <FilterBar
-                  attributes={attributes}
-                  setAttributes={setAttributes}
-                  updateCatalog={updateCatalog}/>
-                <CatalogList 
-                  catalog={catalog} 
-                  setCatalog={setCatalog}
-                  attributes={attributes}
-                  ref={childRef}
-                />
-              </div>}/>
-          <Route path="/cart" exact 
+              // <div>
+              //   <FilterBar
+              //     attributes={attributes}
+              //     setAttributes={setAttributes}
+              //     updateCatalog={updateCatalog}/>
+              //   <CatalogList 
+              //     catalog={catalog} 
+              //     setCatalog={setCatalog}
+              //     attributes={attributes}
+              //     ref={childRef}
+              //   />
+              // </div>}/>
+              <Project></Project>}></Route>
+          {/* <Route path="/cart" exact 
             element={
               <div>                
                 <CartList 
@@ -47,6 +49,11 @@ const App = () => {
                   setCart={setCart}               
                 />
               </div>}/> */}
+            <Route path="/project" exact 
+            element={
+              <div>                
+                <Project></Project>
+              </div>}/>
           <Route path="/Profile" exact 
             element={
               <div>

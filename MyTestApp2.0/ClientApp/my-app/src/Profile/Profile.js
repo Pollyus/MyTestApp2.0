@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
 import LoginBox from './LoginBox';
+// import RegisterBox from './RegisterBox';
 import User from './User';
 import Admin from './Admin';
 
@@ -86,6 +87,7 @@ const Profile = (props) => {
                 :
                 <User logOut={logOut} setAdmin={setAdmin}/>}
                 { openLogin === true ? <LoginBox openLogin={openLogin} onClose={handleClose} checkProfile={checkProfile}/> : null }
+                
         </Container>
     )
 }

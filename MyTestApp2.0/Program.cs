@@ -12,7 +12,6 @@ namespace MyTestApp
 {
     class Program
     {
-        
         public static Task Main(string[] args)
         {
 
@@ -43,8 +42,12 @@ namespace MyTestApp
             builder.Services.AddScoped<IUserRepository>(provider => new
                     UserRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
             provider.GetService<IRepositoryContextFactory>()));
-
-
+            builder.Services.AddScoped<IProjectRepository>(provider => new
+                   ProjectRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
+            provider.GetService<IRepositoryContextFactory>()));
+            builder.Services.AddScoped<ITestGroupRepository>(provider => new
+                   GroupRepository(builder.Configuration.GetConnectionString("DefaultConnection"),
+            provider.GetService<IRepositoryContextFactory>()));
 
             //builder.Services.AddIdentity<User, IdentityRole>(options =>
             //{
@@ -52,11 +55,11 @@ namespace MyTestApp
             //})
             //.AddUserStore<RepositoryContextFactory>()
             //.AddDefaultTokenProviders();
-          
-        
 
-        //Auto-migrations
-        builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
+
+
+            //Auto-migrations
+            builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             var builderConfiguration = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
@@ -78,10 +81,10 @@ namespace MyTestApp
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
+
             app.UseHttpsRedirection();
 
-            
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -94,7 +97,7 @@ namespace MyTestApp
                 if (app.Environment.IsDevelopment())
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
-                  
+
                 }
             });
 
@@ -108,7 +111,7 @@ namespace MyTestApp
 
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
-            
+
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
@@ -130,7 +133,7 @@ namespace MyTestApp
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
                 User admin = new User
-                {                    
+                {
                     FirstName = adminName,
                     Email = adminEmail,
                     UserName = adminEmail

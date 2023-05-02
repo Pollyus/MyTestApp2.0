@@ -44,7 +44,6 @@ namespace DBRepository.Repositories.AppRepositories
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-
                 context.Tests.Add(test);
                 await context.SaveChangesAsync();
             }

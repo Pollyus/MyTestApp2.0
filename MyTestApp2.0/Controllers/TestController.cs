@@ -1,4 +1,5 @@
-﻿using DBRepository.Interfaces;
+﻿using BLL.ViewModels;
+using DBRepository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
