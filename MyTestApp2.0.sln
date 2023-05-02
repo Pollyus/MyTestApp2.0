@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBRepository", "DBRepositor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{CD277A09-B9A2-4B1C-998C-46AD0B2C5A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{2E460758-C8BA-4A0F-9639-19E9D3885408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{2E460758-C8BA-4A0F-9639-19E9D3885408}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runner", "..\MyTests\Runner\Runner.csproj", "{EC202697-1899-449D-8E31-F0D5D74A02F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2E460758-C8BA-4A0F-9639-19E9D3885408}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E460758-C8BA-4A0F-9639-19E9D3885408}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E460758-C8BA-4A0F-9639-19E9D3885408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC202697-1899-449D-8E31-F0D5D74A02F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC202697-1899-449D-8E31-F0D5D74A02F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC202697-1899-449D-8E31-F0D5D74A02F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC202697-1899-449D-8E31-F0D5D74A02F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

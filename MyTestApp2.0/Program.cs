@@ -45,18 +45,14 @@ namespace MyTestApp
             provider.GetService<IRepositoryContextFactory>()));
 
 
-            
-            //builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<RepositoryContextFactory>();
-            //builder.Services.Configure<IdentityOptions>(options =>
-            //{
-            //    //Конфигурация пароля
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireDigit = false;
-            //});
-            //builder.Services.AddHttpContextAccessor();
-            //builder.Services.AddMvcCore().AddApiExplorer();
 
-           
+            //builder.Services.AddIdentity<User, IdentityRole>(options =>
+            //{
+            //    options.User.RequireUniqueEmail = false;
+            //})
+            //.AddUserStore<RepositoryContextFactory>()
+            //.AddDefaultTokenProviders();
+          
         
 
         //Auto-migrations
