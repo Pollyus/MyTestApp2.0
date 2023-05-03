@@ -24,6 +24,7 @@
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
 
+	
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Models;
 using Microsoft.AspNetCore.Mvc;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace MyTestApp
 {
@@ -16,6 +18,19 @@ namespace MyTestApp
         {
 
             var builder = WebApplication.CreateBuilder(args);
+
+            // добавляем сервисы CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
+                                  });
+            });
 
             // Add services to the container.
 
@@ -63,6 +78,7 @@ namespace MyTestApp
             var builderConfiguration = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json"); //1
+           
             var config = builderConfiguration.Build(); // 1
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())  //2
@@ -84,7 +100,16 @@ namespace MyTestApp
 
             app.UseHttpsRedirection();
 
+            // настраиваем CORS https://metanit.com/sharp/aspnet6/14.2.php
 
+            app.UseCors(builder =>
+                  builder.WithOrigins("https://localhost:32768/", "https://localhost:3000")
+                 .AllowAnyHeader()
+                 .AllowAnyMethod()
+                 .SetIsOriginAllowed(_ => true)
+                 .AllowCredentials()
+             );
+            
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -101,6 +126,7 @@ namespace MyTestApp
                 }
             });
 
+           
             app.UseAuthorization();
             app.UseDeveloperExceptionPage();
             app.MapControllers();
@@ -109,63 +135,7 @@ namespace MyTestApp
             return Task.CompletedTask;
         }
 
-        private async Task CreateUserRoles(IServiceProvider serviceProvider)
-        {
-
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-
-            // Создание ролей администратора и пользователя
-            if (await roleManager.FindByNameAsync("manager") == null)
-            {
-                await roleManager.CreateAsync(new IdentityRole("manager"));
-            }
-            if (await roleManager.FindByNameAsync("customer") == null)
-            {
-                await roleManager.CreateAsync(new IdentityRole("customer"));
-            }
-
-            // Создание менеджера
-            string adminEmail = "admin@mail.com";
-            string adminPassword = "Qwerty";
-            string adminName = "Администратор";
-
-            if (await userManager.FindByNameAsync(adminEmail) == null)
-            {
-                User admin = new User
-                {
-                    FirstName = adminName,
-                    Email = adminEmail,
-                    UserName = adminEmail
-                };
-                IdentityResult result = await
-                userManager.CreateAsync(admin, adminPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, "manager");
-                }
-            }
-
-            // Создание покупателя
-            string userName = "Покупатель";
-            string userEmail = "user@mail.com";
-            string userPassword = "Qwerty";
-            if (await userManager.FindByNameAsync(userEmail) == null)
-            {
-                User user = new User
-                {
-                    FirstName = userName,
-                    Email = userEmail,
-                    UserName = userEmail
-                };
-                IdentityResult result = await
-                userManager.CreateAsync(user, userPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "customer");
-                }
-            }
-        }
+        
     }
 
 }

@@ -12,7 +12,13 @@ import Profile from './Profile/Profile';
 import Project from './Project/project';
 
 const App = () => {
-  
+  // const cors = require('cors');
+  // const corsOptions ={
+  //   origin:'http://localhost:3000', 
+  //   credentials:true,            //access-control-allow-credentials:true
+  //   optionSuccessStatus:200
+  // }
+  // App.use(cors(corsOptions));
   // const [catalog, setCatalog] = useState([]);
   // const [cart, setCart] = useState([]);
 
@@ -64,6 +70,7 @@ const App = () => {
     </Container>
   );
 };
+
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
