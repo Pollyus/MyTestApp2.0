@@ -1,20 +1,23 @@
 import { createTheme } from '@mui/material/styles';
+import {green, purpule, yellow, pink, white} from "./color";
 
 const theme = createTheme({
     palette: {
       primary: {
-        main: "#080706",
+        main: purpule[300],
       },
       secondary: {
-        main: '#efefef',  
+        main: green[300],  
       },
       button: {
-        main: '#d1b280',
-        contrastText: '#ffffff'
+        main: purpule[400],
+        contrastText: white[0],
       },
       background: {
-        main: '#594d46',
+        main: white[0],
       },
+      
+      
     },
   });
 

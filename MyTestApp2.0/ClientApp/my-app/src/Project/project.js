@@ -2,14 +2,45 @@ import { Typography, Container, Grid, Box, Button, TextField, ListItem } from "@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './project.css';
-import theme from '../theme';
+import theme from '../Style/theme';
 import axios from 'axios';
 import AddProject from "./addProject";
+import "../index";
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-//import MailIcon from '@mui/icons-material/Mail';
-import KeyIcon from '@mui/icons-material/Key';
-import { DriveFileRenameOutline } from "@mui/icons-material";
-import { Route } from "@mui/icons-material";
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#81B809",
+      color: theme.palette.common.white,
+      fontSize: 25,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 20,
+    },
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: "#D5FC7F",
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+
+  function createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
+  }
+  
+  
 
 function GetProjects() {
     
@@ -54,22 +85,46 @@ function GetProjects() {
  
 
     return (
+        <Container>
         <Box>
             <h1 className="text">Посмотреть все проекты</h1>
-            <Box>
+            {/* <Box>
                 {projects?.map((project) => (
                     <ListItem key={project.id}>
                         {project.name}
                         {project.path}
                     </ListItem>
                 ))}
-            </Box>
-            <h2>Добавить проект</h2>
+            </Box> */}
+
+        </Box>
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell className="TableText">Имя проекта</StyledTableCell>
+              <StyledTableCell align="right">Путь к проекту</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.map((row) => (
+              <StyledTableRow key={row.name}>
+                <StyledTableCell component="th" scope="row">
+                  {row.name}
+                </StyledTableCell>
+                <StyledTableCell align="right">{row.path}</StyledTableCell>
+
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <h2>Добавить проект</h2>
             <Container>
                 <AddProject></AddProject>
             </Container>
-           
-        </Box>
+      </Container>
+      
     )
 }
 

@@ -1,5 +1,14 @@
 .text{
-    margin-top: 20px;
-    padding-top: 20%;
-    color: aquamarine;
+    top: 150px;
+    padding-top: 20px;
+    color: #570489;
+    font-family: 'Open Sans';
+    font-style: normal;
+}
+
+.TableText{
+    color: "#B0096E";
+    font-family: 'Open Sans';
+    font-style: normal;
+    size: 12;
 }

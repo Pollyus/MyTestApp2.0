@@ -1,0 +1,12 @@
+.BackImage{
+    background-image: url(/src/Style/images/YellowMakeTest.png) ;
+    background-Position: left;
+    background-size: auto;
+    top: 60px;
+    height: 100vh;
+    width: 100vw;
+    float: left;
+    position: fixed;
+    transform: translate(-30%);
+    background-repeat: no-repeat;
+  }

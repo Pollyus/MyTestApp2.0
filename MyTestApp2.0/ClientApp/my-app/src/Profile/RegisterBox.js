@@ -3,14 +3,14 @@ import Dialog from '@mui/material/Dialog';
 import Card from '@mui/material/Card';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import theme from '../theme'
+import theme from '../Style/theme'
 import { Typography, Container, Grid, Box, Button, TextField } from '@mui/material';
 
 import MailIcon from '@mui/icons-material/Mail';
 import KeyIcon from '@mui/icons-material/Key';
 
 function RegisterBox(props) {
-    const { onClose, openReg, checkProfile } = props;
+    const { onClose, openReg } = props;
     
     const [login, setLogin] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -42,7 +42,6 @@ function RegisterBox(props) {
             .then((response) => { 
                 console.log(response.data.message);
                 typeof response.data.error !== "undefined" && setErrors(response.data.error)
-                checkProfile();
                 onClose();
             })
             .catch(console.error);
@@ -50,7 +49,7 @@ function RegisterBox(props) {
 
 
     return (
-        <Dialog onClose={handleClose} open={openLogin} sx={{m: 'auto'}}>
+        <Dialog onClose={handleClose} open={openReg} sx={{m: 'auto'}}>
             <Box sx={{width: 450, height: 350,display: 'flex', flexDirection: 'column', justifyContent: 'space-between', m: 'auto' }}>
                 <Typography sx={{width: "100%", textAlign: 'center', mt: 3, fontSize: 16}}>Регистрация</Typography>
                 <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', m: 'auto'}}>
@@ -91,7 +90,7 @@ function RegisterBox(props) {
                 </Box>
                 
                 <Box sx={{padding: 1, display: 'flex', alignItems: 'center', flexDirection: 'row'}}> 
-                    <Button theme={theme} sx={{m: 'auto', mb: 3}} color="button" variant="contained" onClick={logIn}>
+                    <Button theme={theme} sx={{m: 'auto', mb: 3}} color="button" variant="contained" onClick={Register}>
                         Зарегестрироваться
                     </Button>
                 </Box>
@@ -100,4 +99,4 @@ function RegisterBox(props) {
     );
   }
 
-export default LoginBox;
+export default RegisterBox;

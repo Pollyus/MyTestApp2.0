@@ -1,12 +1,12 @@
 import { Grid, Container, Typography, Card, Tooltip, Snackbar, Button, IconButton } from '@mui/material';
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import theme from '../theme';
+import theme from '../Style/theme';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
 import LoginBox from './LoginBox';
-// import RegisterBox from './RegisterBox';
+import RegisterBox from './RegisterBox';
 import User from './User';
 import Admin from './Admin';
 
@@ -15,7 +15,8 @@ const Profile = (props) => {
     const [name, setName] = React.useState("");
     const [openLogin, setOpenLogin] = React.useState(false);
     const [isAdmin, setAdmin] = React.useState(false);
-    
+    const [openRegister, setOpenRegister] = React.useState(false);
+
     useEffect(() =>{
         checkProfile();
     }, [])
@@ -23,9 +24,13 @@ const Profile = (props) => {
     const logIn = () => {
         setOpenLogin(true);
     }    
+    const registerOn = () => {
+        setOpenRegister(true);
+    }    
 
     const handleClose = (value) => {
         setOpenLogin(false);
+        setOpenRegister(false);
     };
 
     const checkProfile = () => {   
@@ -77,16 +82,17 @@ const Profile = (props) => {
                             Войти
                         </Button>
 
-                        <Button theme={theme} color="button" variant="contained">
+                        <Button theme={theme} color="button" variant="contained" onClick={registerOn}>
                             Регистрация
                         </Button>
                     </Box>
                 </Card> 
                 : isAdmin === true ?
                 <Admin logOut={logOut}/>
-                :
+                : 
                 <User logOut={logOut} setAdmin={setAdmin}/>}
                 { openLogin === true ? <LoginBox openLogin={openLogin} onClose={handleClose} checkProfile={checkProfile}/> : null }
+                { openRegister === true ? <RegisterBox openReg={openRegister} onClose={handleClose} />: null}
                 
         </Container>
     )

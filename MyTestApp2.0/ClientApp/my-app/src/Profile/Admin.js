@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from "@mui/material"
-import theme from '../theme';
+import theme from '../Style/theme';
 
 const Admin = ({logOut}) => {
     return(

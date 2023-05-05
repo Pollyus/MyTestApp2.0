@@ -2,7 +2,7 @@ import { Grid, IconButton, Typography, Card, Tooltip, Alert, Snackbar, Button, A
 import React, { useEffect, useState} from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import axios from 'axios';
-import theme from '../theme';
+import theme from '../Style/theme';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';

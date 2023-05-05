@@ -3,70 +3,58 @@ import ReactDOM from 'react-dom/client';
 
 import Header from './Header/header';
 //import axios from 'axios';
-import theme from './theme';
+import theme from './Style/theme';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Button, Container } from "@mui/material";
 
+
 import Profile from './Profile/Profile';
 import Project from './Project/project';
+import {Home} from './Home/home';
+import TestResult from './TestResult/testResult';
+import {InputData} from './InputData/inputdata';
+
 
 const App = () => {
-  // const cors = require('cors');
-  // const corsOptions ={
-  //   origin:'http://localhost:3000', 
-  //   credentials:true,            //access-control-allow-credentials:true
-  //   optionSuccessStatus:200
-  // }
-  // App.use(cors(corsOptions));
-  // const [catalog, setCatalog] = useState([]);
-  // const [cart, setCart] = useState([]);
-
-  // const [attributes, setAttributes] = useState({sort: 0, name:"", selectedCategory:"", selectedBrand:0});
-  // const childRef = useRef()
   
-  // const updateCatalog = (attributes) => childRef.current.updateCatalog(attributes);
- 
   return (
     <Container>
       <BrowserRouter>
         <Header/>
         <Routes>
           <Route path="/" exact 
-            element={
-              // <div>
-              //   <FilterBar
-              //     attributes={attributes}
-              //     setAttributes={setAttributes}
-              //     updateCatalog={updateCatalog}/>
-              //   <CatalogList 
-              //     catalog={catalog} 
-              //     setCatalog={setCatalog}
-              //     attributes={attributes}
-              //     ref={childRef}
-              //   />
-              // </div>}/>
-              <Project></Project>}></Route>
-          {/* <Route path="/cart" exact 
+            element={ <Home/>}>
+          </Route>
+           <Route path="/" exact 
             element={
               <div>                
-                <CartList 
-                  cart={cart} 
-                  setCart={setCart}               
-                />
-              </div>}/> */}
+                <Home/>
+              </div>}/> 
             <Route path="/project" exact 
             element={
               <div>                
                 <Project></Project>
               </div>}/>
-          <Route path="/Profile" exact 
+          <Route path="/profile" exact 
             element={
               <div>
                 <Profile/>
               </div>}/>
+          <Route path="/testResult" exact 
+            element={
+              <div>                
+                <TestResult/>
+              </div>}/>
+          <Route path="/inputData" exact 
+            element={
+              <div>                
+                <InputData/>
+              </div>}/> 
+          
         </Routes>
       </BrowserRouter>
+
     </Container>
   );
 };

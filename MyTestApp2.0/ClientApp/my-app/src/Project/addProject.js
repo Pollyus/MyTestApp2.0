@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import Card from '@mui/material/Card';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import theme from '../theme'
+import theme from '../Style/theme'
 import { Typography, Container, Grid, Box, Button, TextField } from '@mui/material';
 
 import { DriveFileRenameOutline, Route } from '@mui/icons-material';
