@@ -14,7 +14,7 @@ import Project from './Project/project';
 import {Home} from './Home/home';
 import TestResult from './TestResult/testResult';
 import {InputData} from './InputData/inputdata';
-
+import TestReport from './TestReport/testReport';
 
 const App = () => {
   
@@ -51,7 +51,11 @@ const App = () => {
               <div>                
                 <InputData/>
               </div>}/> 
-          
+          <Route path="/testReport" exact 
+            element={
+              <div>                
+                <TestReport/>
+              </div>}/> 
         </Routes>
       </BrowserRouter>
 
