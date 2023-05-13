@@ -43,7 +43,7 @@ function AddTest() {
 
     return (
         <Box sx={{ width: 450, height: 350, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', m: 'auto' }}>
-                <Typography sx={{ width: "100%", textAlign: 'center', mt: 3, fontSize: 16 }}>Введите название проекта и путь к нему</Typography>
+                <Typography sx={{ width: "100%", textAlign: 'center', mt: 3, fontSize: 16 }}>Введите название проекта, путь к нему, pipeline, job, а также namespace, если это необходимо</Typography>
                  <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', m: 'auto' }}>
                      <Box sx={{ padding: 1, display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
                          <DriveFileRenameOutline theme={theme} color="button" sx={{ height: 30, width: 30, mt: 'auto', mb: 'auto' }} />

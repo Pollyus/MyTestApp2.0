@@ -26,7 +26,7 @@ function AddProject() {
 
     const AddData = (e) => {
         e.preventDefault();
-        
+        axios.defaults.withCredentials = true;
         const value = { "ProjectName": projectName, "ProjectPath": projectPath};
         axios.post(
             'https://localhost:32768/api/Project/add', value, { withCredentials: true }

@@ -10,13 +10,13 @@
   .BackImageHome{
     background-image: url(/src/Style/images/MainScreen.png) ;
     position: fixed;
-    background-Position: left;
-    background-size: auto;
+    background-Position: right;
+    background-size: cover;
     height: 100vh;
     width: 100vw;
     float: left;
     position: fixed;
-    transform: translate(-15%);
+    transform: translate(-5%);
   }
   
   .LogoHorizontal{

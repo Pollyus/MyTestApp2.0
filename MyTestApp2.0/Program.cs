@@ -44,6 +44,7 @@ namespace MyTestApp
             });
 
             builder.Services.AddMvc(option => option.EnableEndpointRouting = false);
+            builder.Services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             builder.Services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/my-app/build";
@@ -104,6 +105,7 @@ namespace MyTestApp
 
             app.UseCors(builder =>
                   builder.WithOrigins("https://localhost:32768/", "https://localhost:3000")
+                 .AllowAnyMethod()
                  .AllowAnyHeader()
                  .AllowAnyMethod()
                  .SetIsOriginAllowed(_ => true)
